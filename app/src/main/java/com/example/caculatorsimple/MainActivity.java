@@ -14,7 +14,7 @@ public class MainActivity extends AppCompatActivity {
     private String workings = "", preview = "";
     private Double firstNumber, secondNumber;
     private String firstNumberString, secondNumberString;
-    private String lastNumber;
+    private String lastOperator = "";
     private int flagOperator = 0;
     private int flagEqual = 0;
     private int flagSign = 0;
@@ -94,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
         workingsTV.setText("0");
         workings = "";
         preview = "";
+        lastOperator = "";
     }
 
     public void BSonClick(View view) {
@@ -109,75 +110,94 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void divisionOnClick(View view) {
+        if (flagOperator == 0 && lastOperator != "") {
+            getLastOperator(lastOperator);
+            lastOperator = "/";
+            flagOperator = 1;
+        } else if (flagOperator == 0) {
+            lastOperator = "/";
+            flagOperator = 1;
+        } else if (flagOperator == 1) flagOperator = 0;
         setPreview("/");
+        flagEqual = 0;
         operatorType = 1;
-        if (flagOperator == 0) flagOperator = 1;
-        else flagOperator = 0;
     }
 
     public void sevenOnClick(View view) {
         setWorkings("7");
-        lastNumber = "7";
     }
 
     public void eightOnClick(View view) {
         setWorkings("8");
-        lastNumber = "8";
     }
 
     public void nineOnClick(View view) {
         setWorkings("9");
-        lastNumber = "9";
     }
 
     public void multiplicationOnClick(View view) {
+        if (flagOperator == 0 && lastOperator != "") {
+            getLastOperator(lastOperator);
+            lastOperator = "x";
+            flagOperator = 1;
+        } else if (flagOperator == 0) {
+            lastOperator = "x";
+            flagOperator = 1;
+        } else if (flagOperator == 1) flagOperator = 0;
         setPreview("x");
+        flagEqual = 0;
         operatorType = 2;
-        if (flagOperator == 0) flagOperator = 1;
-        else flagOperator = 0;
     }
 
     public void fourOnClick(View view) {
         setWorkings("4");
-        lastNumber = "4";
     }
 
     public void fiveOnClick(View view) {
         setWorkings("5");
-        lastNumber = "5";
     }
 
     public void sixOnClick(View view) {
         setWorkings("6");
-        lastNumber = "6";
     }
 
     public void subtractionOnClick(View view) {
+        if (flagOperator == 0 && lastOperator != "") {
+            getLastOperator(lastOperator);
+            lastOperator = "-";
+            flagOperator = 1;
+        } else if (flagOperator == 0) {
+            lastOperator = "-";
+            flagOperator = 1;
+        } else if (flagOperator == 1) flagOperator = 0;
         setPreview("-");
+        flagEqual = 0;
         operatorType = 3;
-        if (flagOperator == 0) flagOperator = 1;
-        else flagOperator = 0;
     }
 
     public void oneOnClick(View view) {
         setWorkings("1");
-        lastNumber = "1";
     }
 
     public void twoOnClick(View view) {
         setWorkings("2");
-        lastNumber = "2";
     }
 
     public void threeOnClick(View view) {
         setWorkings("3");
-        lastNumber = "3";
     }
 
     public void additionOnClick(View view) {
+        if (flagOperator == 0 && lastOperator != "") {
+            getLastOperator(lastOperator);
+            lastOperator = "+";
+            flagOperator = 1;
+        } else if (flagOperator == 0) {
+            lastOperator = "+";
+            flagOperator = 1;
+        } else if (flagOperator == 1) flagOperator = 0;
         setPreview("+");
-        if (flagOperator == 0) flagOperator = 1;
-        else flagOperator = 0;
+        flagEqual = 0;
         operatorType = 4;
     }
 
@@ -204,66 +224,82 @@ public class MainActivity extends AppCompatActivity {
         setWorkings(".");
     }
 
+    public void setResult(double result) {
+        int integerPart = (int)result;
+        int decimalPart = (int)((result-integerPart)*10);
+        if (decimalPart == 0) {
+            previewTV.setText(preview+ "=");
+            workingsTV.setText(Integer.toString(integerPart));
+        } else {
+            previewTV.setText(preview + "=");
+            workingsTV.setText(Double.toString(result));
+        }
+    }
+
+    public void getLastOperator(String lastOperator) {
+        String s = previewTV.getText().toString();
+        firstNumberString = s.substring(0, s.length() - 1);
+        firstNumber = Double.parseDouble(firstNumberString);
+        secondNumberString = workingsTV.getText().toString();
+        secondNumber = Double.parseDouble(secondNumberString);
+        switch (lastOperator) {
+            case "/": {
+                result = firstNumber/secondNumber;
+                break;
+            }
+            case "x": {
+                result = firstNumber*secondNumber;
+                break;
+            }
+            case "-": {
+                result = firstNumber-secondNumber;
+                break;
+            }
+            case "+": {
+                result = firstNumber+secondNumber;
+                break;
+            }
+        }
+        int integerPart = (int)result;
+        int decimalPart = (int)((result-integerPart)*10);
+        if (decimalPart == 0) {
+            previewTV.setText(Integer.toString(integerPart) + lastOperator);
+            workingsTV.setText(Integer.toString(integerPart));
+        } else {
+            previewTV.setText(Double.toString(result) + lastOperator);
+            workingsTV.setText(Double.toString(result));
+        }
+    }
+
     @SuppressLint("SetTextI18n")
     public void equalOnClick(View view) {
         secondNumberString = workingsTV.getText().toString();
         secondNumber = Double.parseDouble(secondNumberString);
         preview += workingsTV.getText().toString();
         flagOperator = 1;
+        lastOperator = "";
         workings = "";
         if (flagEqual == 0) flagEqual = 1;
         else flagEqual = 0;
         switch (operatorType) {
             case 1: {
                 result = firstNumber/secondNumber;
-                int integerPart1 = (int)result;
-                int decimalPart1 = (int)((result-integerPart1)*10);
-                if (decimalPart1 == 0) {
-                    previewTV.setText(preview);
-                    workingsTV.setText(Integer.toString(integerPart1));
-                } else {
-                    previewTV.setText(preview);
-                    workingsTV.setText(Double.toString(result));
-                }
+                setResult(result);
                 break;
             }
             case 2: {
                 result = firstNumber*secondNumber;
-                int integerPart2 = (int)result;
-                int decimalPart2 = (int)((result-integerPart2)*10);
-                if (decimalPart2 == 0) {
-                    previewTV.setText(preview);
-                    workingsTV.setText(Integer.toString(integerPart2));
-                } else {
-                    previewTV.setText(preview);
-                    workingsTV.setText(Double.toString(result));
-                }
+                setResult(result);
                 break;
             }
             case 3: {
                 result = firstNumber-secondNumber;
-                int integerPart3 = (int)result;
-                int decimalPart3 = (int)((result-integerPart3)*10);
-                if (decimalPart3 == 0) {
-                    previewTV.setText(preview);
-                    workingsTV.setText(Integer.toString(integerPart3));
-                } else {
-                    previewTV.setText(preview);
-                    workingsTV.setText(Double.toString(result));
-                }
+                setResult(result);
                 break;
             }
             case 4: {
                 result = firstNumber+secondNumber;
-                int integerPart4 = (int)result;
-                int decimalPart4 = (int)((result-integerPart4)*10);
-                if (decimalPart4 == 0) {
-                    previewTV.setText(preview);
-                    workingsTV.setText(Integer.toString(integerPart4));
-                } else {
-                    previewTV.setText(preview);
-                    workingsTV.setText(Double.toString(result));
-                }
+                setResult(result);
                 break;
             }
         }
