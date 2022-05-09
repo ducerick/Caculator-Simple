@@ -20,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
     private int flagSign = 0;
     private int operatorType = 0;
     private double result;
+    private String storeLastOperator;
 
 
     @Override
@@ -121,6 +122,7 @@ public class MainActivity extends AppCompatActivity {
         setPreview("/");
         flagEqual = 0;
         operatorType = 1;
+        storeLastOperator = lastOperator;
     }
 
     public void sevenOnClick(View view) {
@@ -147,6 +149,7 @@ public class MainActivity extends AppCompatActivity {
         setPreview("x");
         flagEqual = 0;
         operatorType = 2;
+        storeLastOperator = lastOperator;
     }
 
     public void fourOnClick(View view) {
@@ -173,6 +176,7 @@ public class MainActivity extends AppCompatActivity {
         setPreview("-");
         flagEqual = 0;
         operatorType = 3;
+        storeLastOperator = lastOperator;
     }
 
     public void oneOnClick(View view) {
@@ -199,6 +203,7 @@ public class MainActivity extends AppCompatActivity {
         setPreview("+");
         flagEqual = 0;
         operatorType = 4;
+        storeLastOperator = lastOperator;
     }
 
     public void signOnClick(View view) {
@@ -273,14 +278,22 @@ public class MainActivity extends AppCompatActivity {
 
     @SuppressLint("SetTextI18n")
     public void equalOnClick(View view) {
-        secondNumberString = workingsTV.getText().toString();
-        secondNumber = Double.parseDouble(secondNumberString);
-        preview += workingsTV.getText().toString();
-        flagOperator = 1;
-        lastOperator = "";
-        workings = "";
-        if (flagEqual == 0) flagEqual = 1;
-        else flagEqual = 0;
+        String storeSecondNumber = secondNumberString;
+        if (flagEqual == 0) {
+            flagEqual = 1;
+            secondNumberString = workingsTV.getText().toString();
+            secondNumber = Double.parseDouble(secondNumberString);
+            preview += workingsTV.getText().toString();
+            lastOperator = "";
+            workings = "";
+        }
+        else {
+            firstNumberString = workingsTV.getText().toString();
+            firstNumber = Double.parseDouble(firstNumberString);
+            preview = firstNumberString + storeLastOperator + storeSecondNumber;
+            lastOperator = "";
+            workings = "";
+        }
         switch (operatorType) {
             case 1: {
                 result = firstNumber/secondNumber;
