@@ -207,17 +207,32 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void signOnClick(View view) {
-        if (flagSign == 0) {
-            flagSign = 1;
-            firstNumberString = "-" + workingsTV.getText().toString();
-            workingsTV.setText(firstNumberString);
-            firstNumber = Double.parseDouble(firstNumberString);
+        if (previewTV.getText().toString() == "") {
+            if (flagSign == 0) {
+                flagSign = 1;
+                firstNumberString = "-" + workingsTV.getText().toString();
+                workingsTV.setText(firstNumberString);
+                firstNumber = Double.parseDouble(firstNumberString);
+            } else {
+                flagSign = 0;
+                firstNumberString = workingsTV.getText().toString();
+                firstNumber = -Double.parseDouble(firstNumberString);
+                firstNumberString = firstNumber.toString();
+                workingsTV.setText(firstNumberString);
+            }
         } else {
-            flagSign = 0;
-            firstNumberString = workingsTV.getText().toString();
-            firstNumber = -Double.parseDouble(firstNumberString);
-            firstNumberString = firstNumber.toString();
-            workingsTV.setText(firstNumberString);
+            if (flagSign == 0) {
+                flagSign = 1;
+                secondNumberString = "-" + workingsTV.getText().toString();
+                workingsTV.setText(secondNumberString);
+                secondNumber = Double.parseDouble(secondNumberString);
+            } else {
+                flagSign = 0;
+                secondNumberString = workingsTV.getText().toString();
+                secondNumber = -Double.parseDouble(secondNumberString);
+                secondNumberString = secondNumber.toString();
+                workingsTV.setText(secondNumberString);
+            }
         }
     }
 
